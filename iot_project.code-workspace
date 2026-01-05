@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "iot_project",
+			"path": "."
+		},
+		{
+			"name": "bai_5",
+			"path": "../bai_5"
+		}
+	],
+	"settings": {}
+}
