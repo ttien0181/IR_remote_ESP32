@@ -25,7 +25,7 @@ bool isTimeValid() {
 }
 
 String nowIso8601Utc() {
-  // Nếu chưa valid, vẫn trả chuỗi theo millis (đỡ null), nhưng bạn nên đợi NTP valid.
+  // Nếu chưa valid, vẫn trả chuỗi theo millis (đỡ null.
   if (!timeValidImpl()) {
     return String("1970-01-01T00:00:00.000Z");
   }

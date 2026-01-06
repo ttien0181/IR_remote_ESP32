@@ -11,23 +11,22 @@
 
 #include <ArduinoJson.h>
 
-// ================= Pins =================
-static const uint8_t PIN_IR   = 17;
+//  Pins 
+static const uint8_t PIN_IR   = 21;
 static const uint8_t PIN_DHT  = 4;
-static const uint8_t PIN_RESET = 10;     // bạn chốt reset pin 10
+static const uint8_t PIN_RESET = 0;     // bạn chốt reset pin 0
 static const uint32_t RESET_HOLD_MS = 5000;
 
-// ================= MQTT server =================
+//  MQTT server 
 static const char* MQTT_HOST = "c55d02d9fd4d4b4f812d0e68dc8b3ef6.s1.eu.hivemq.cloud";
 static const int   MQTT_PORT = 8883;
 static const char* MQTT_USER = "ttien0181";
 static const char* MQTT_PASS = "Ttien0181";
 
-// ================= HTTP login endpoint =================
-// ⚠️ BẠN CẦN ĐIỀN URL THẬT của BE tại đây:
+//  HTTP login endpoint 
 static const char* LOGIN_URL = "http://localhost:5000/api/device/login";
 
-// ================= Globals =================
+//  Globals 
 ConfigStore g_store;
 DeviceConfig g_cfg;
 
@@ -42,11 +41,11 @@ Dht11Sensor g_dht;
 // RAW buffer for commands
 static uint16_t g_rawBuf[1200];
 
-// periodic publish
+// 10s phát 1 lần 
 static uint32_t g_lastSensorMs = 0;
 static const uint32_t SENSOR_INTERVAL_MS = 10000;
 
-// ---- helper: parse protocol uppercase without String
+//  parse protocol uppercase without String
 static void toUpperCopy(const char* src, char* dst, size_t dstSize) {
   if (!src || dstSize == 0) return;
   strncpy(dst, src, dstSize - 1);
@@ -54,7 +53,7 @@ static void toUpperCopy(const char* src, char* dst, size_t dstSize) {
   for (size_t i = 0; dst[i]; i++) dst[i] = (char)toupper((unsigned char)dst[i]);
 }
 
-// ---- Command handler (MQTT -> IR -> ACK)
+//  Command handler (MQTT -> IR -> ACK)
 static void handleCommand(const JsonDocument& doc) {
   const char* protocol = doc["protocol"];
   if (!protocol) return;
@@ -169,12 +168,6 @@ void setup() {
 
   TimeUtils::beginNtp();
   Serial.println("[NTP] Requesting time sync");
-
-  if (mode == DeviceMode::STA_LOGIN) {
-    Serial.println("[MODE] STA_LOGIN");
-    g_wifiMgr.startStaLoginPortal(g_store, g_cfg, String(LOGIN_URL));
-    return;
-  }
 
   // RUN mode
   Serial.println("[MODE] RUN");

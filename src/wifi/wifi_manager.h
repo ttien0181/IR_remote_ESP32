@@ -5,7 +5,6 @@
 
 enum class DeviceMode {
   AP_CONFIG,
-  STA_LOGIN,
   RUN
 };
 
@@ -19,9 +18,7 @@ public:
   // AP config (save ssid/pass)
   void startApPortal(ConfigStore& store, DeviceConfig& cfg);
 
-  // STA login portal (HTTP login -> controller_id)
-  void startStaLoginPortal(ConfigStore& store, DeviceConfig& cfg,
-                           const String& loginUrl);
+
 
   // WiFi connect
   bool connectSta(const DeviceConfig& cfg, uint32_t timeoutMs);
@@ -52,9 +49,7 @@ private:
   void _apRoot(const DeviceConfig& cfg);
   void _apSave(ConfigStore& store);
 
-  // handlers STA login
-  void _staRoot(const DeviceConfig& cfg);
-  void _staLogin(ConfigStore& store, const String& loginUrl);
+
 
   // store temp form values
   String _tmpSsid, _tmpPass;

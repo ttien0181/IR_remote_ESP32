@@ -127,7 +127,7 @@ bool MqttClient::publishMetric(const String& metric, float value, const String& 
 
   StaticJsonDocument<256> d;
   d["metric"] = metric;
-  d["values"] = value;
+  d["value"] = value;
   d["unit"] = unit;
   d["ts"] = tsIso;
 
