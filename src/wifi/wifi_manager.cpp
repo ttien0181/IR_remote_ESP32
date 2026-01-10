@@ -86,11 +86,11 @@ void WiFiManager::_apRoot(const DeviceConfig& cfg) {
   String ssid = _htmlEscape(cfg.wifiSsid);
   String cid = _htmlEscape(cfg.controllerId);
   String html;
-  html += "<!doctype html><html><head><meta charset='utf-8'/>;";
-  html += "<meta name='viewport' content='width=device-width,initial-scale=1'/>;";
+  html += "<!doctype html><html><head><meta charset='utf-8'/>";
+  html += "<meta name='viewport' content='width=device-width,initial-scale=1'/>";
   html += "<title>ESP32 WiFi Config</title></head><body style='font-family:Arial'>";
   html += "<h3>ESP32 WiFi Config (AP mode)</h3>";
-  html += "<p>AP SSID: <b>ESP32_Config</b> | PASS: <b>12345678</b></p>";
+  // html += "<p>AP SSID: <b>ESP32_Config</b> | PASS: <b>12345678</b></p>";
   html += "<form method='POST' action='/save'>";
   html += "WiFi SSID:<br><input name='wifi_ssid' value='" + ssid + "' required><br><br>";
   html += "WiFi Password:<br><input name='wifi_pass' type='password' value=''><br><br>";

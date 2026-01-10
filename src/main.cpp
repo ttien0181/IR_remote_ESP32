@@ -14,7 +14,8 @@
 //  Pins 
 static const uint8_t PIN_IR   = 21;
 static const uint8_t PIN_DHT  = 4;
-static const uint8_t PIN_RESET = 0;     // bạn chốt reset pin 0
+static const uint8_t PIN_RESET = 0;     // reset pin 0
+static const uint8_t PIN_LED = 2;       // LED indicator
 static const uint32_t RESET_HOLD_MS = 5000;
 
 //  MQTT server 
@@ -138,6 +139,10 @@ void setup() {
   Serial.print(" controller_id=");
   Serial.println(g_cfg.controllerId);
 
+  // init LED
+  pinMode(PIN_LED, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
+
   // init reset
   g_wifiMgr.begin(PIN_RESET, RESET_HOLD_MS);
 
@@ -152,6 +157,7 @@ void setup() {
 
   if (mode == DeviceMode::AP_CONFIG) {
     Serial.println("[MODE] AP_CONFIG");
+    digitalWrite(PIN_LED, HIGH);  // Turn on LED
     g_wifiMgr.startApPortal(g_store, g_cfg);
     return;
   }
@@ -160,6 +166,7 @@ void setup() {
   Serial.println("[WIFI] connecting...");
   if (!g_wifiMgr.connectSta(g_cfg, 20000)) {
     Serial.println("[WIFI] failed -> AP_CONFIG");
+    digitalWrite(PIN_LED, HIGH);  // Turn on LED
     g_wifiMgr.startApPortal(g_store, g_cfg);
     return;
   }
@@ -171,6 +178,7 @@ void setup() {
 
   // RUN mode
   Serial.println("[MODE] RUN");
+  digitalWrite(PIN_LED, LOW);  // Turn off LED
 
   // TLS insecure (như bạn đang dùng); sau này thay CA pinning nếu muốn
   g_tls.setInsecure();
