@@ -42,6 +42,10 @@ Dht11Sensor g_dht;
 // RAW buffer for commands
 static uint16_t g_rawBuf[1200];
 
+// LED control for IR send
+static uint32_t g_ledOffMs = 0;
+static const uint32_t LED_ON_DURATION_MS = 1000;  // 1 second
+
 // 10s phát 1 lần 
 static uint32_t g_lastSensorMs = 0;
 static const uint32_t SENSOR_INTERVAL_MS = 10000;
@@ -89,6 +93,10 @@ static void handleCommand(const JsonDocument& doc) {
     Serial.print(" freq=");
     Serial.println(frequency);
     g_ir.sendRaw(g_rawBuf, (uint16_t)len, (uint16_t)frequency);
+    
+    // Turn on LED for 1 second
+    digitalWrite(PIN_LED, HIGH);
+    g_ledOffMs = millis() + LED_ON_DURATION_MS;
 
   } else {
     int bits = doc["bits"] | 0;
@@ -106,10 +114,19 @@ static void handleCommand(const JsonDocument& doc) {
 
     if (strcmp(proto, "SIRC") == 0) {
       g_ir.sendSirc((uint32_t)data, (uint16_t)bits);
+      // Turn on LED for 1 second
+      digitalWrite(PIN_LED, HIGH);
+      g_ledOffMs = millis() + LED_ON_DURATION_MS;
     } else if (strcmp(proto, "NEC") == 0) {
       g_ir.sendNec((uint32_t)data, (uint16_t)bits);
+      // Turn on LED for 1 second
+      digitalWrite(PIN_LED, HIGH);
+      g_ledOffMs = millis() + LED_ON_DURATION_MS;
     } else if (strcmp(proto, "SAMSUNG") == 0) {
       g_ir.sendSamsung((uint32_t)data, (uint16_t)bits);
+      // Turn on LED for 1 second
+      digitalWrite(PIN_LED, HIGH);
+      g_ledOffMs = millis() + LED_ON_DURATION_MS;
     } else {
       // unsupported => still ACK? tuỳ bạn; hiện tại không ack nếu không hỗ trợ
       Serial.println("[IR] Unsupported protocol");
@@ -218,6 +235,12 @@ static void publishSensorsIfDue() {
 }
 
 void loop() {
+  // Check if LED should turn off
+  if (g_ledOffMs > 0 && millis() >= g_ledOffMs) {
+    digitalWrite(PIN_LED, LOW);
+    g_ledOffMs = 0;
+  }
+
   // reset hold always works
   g_wifiMgr.handleResetHold(g_store);
 
